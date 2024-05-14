@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TNKI</title>
+    <!--Takto se tailwind správně v praxi nepoužívá! Pro naše použití však stačí.-->
+    <script src="lib/tailwind.js"></script>
+  </head>
+  <body class="bg-slate-800">
+    <div id="home" class="grid items-center justify-items-center h-screen">
+      <div class="w-80">
+        <img src="assets/header.png" />
+      </div>
+
+      <div
+        class="bg-slate-900 grid items-center justify-items-center h-[70vh] w-2/3 rounded-2xl"
+      >
+        <input id="room_name" placeholder="Místnost" />
+
+        <select id="max_players">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+
+        <input id="player_name" placeholder="Jméno" />
+
+        <button
+          onclick="join_room()"
+          class="bg-slate-400 w-32 rounded-2xl text-white h-16"
+        >
+          Připojit
+        </button>
+
+        <button
+          onclick="create_room()"
+          class="bg-yellow-400 w-32 rounded-2xl text-white h-16"
+        >
+          Vytvořit
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="lobby"
+      class="grid items-center justify-items-center h-screen hidden text-white"
+    >
+      <h1 id="room_view"></h1>
+      <h1 id="players_view"></h1>
+
+      <button
+        id="start"
+        onclick="start_room()"
+        class="bg-yellow-400 w-32 rounded-2xl text-white h-16"
+      >
+        START
+      </button>
+
+      <button
+        id="cancel"
+        onclick="leave_room()"
+        class="bg-slate-400 w-32 rounded-2xl text-white h-16"
+      >
+        ZRUŠIT
+      </button>
+    </div>
+
+    <div
+      id="game"
+      class="w-screen h-screen grid items-center justify-items-center hidden"
+    >
+      <div
+        id="indicator_0"
+        class="grid absolute top-4 left-4 w-64 h-[140px] bg-slate-900 rounded-2xl text-white hidden"
+      >
+        <div class="flex flex-col items-center justify-center">
+          <img
+            src="assets/tank.png"
+            class="w-16"
+            style="
+              filter: drop-shadow(0px 1000px 0 red);
+              transform: translateY(-1000px);
+            "
+          />
+        </div>
+
+        <div
+          class="flex flex-col col-start-2 col-span-2 row-start-1 items-center bg-black rounded-tr-2xl rounded-br-2xl justify-evenly"
+        >
+          <div class="ammo flex gap-2 h-8 w-full justify-center"></div>
+
+          <div class="health flex gap-2 h-8 w-full justify-center"></div>
+        </div>
+
+        <div
+          class="flex bg-black col-span-3 rounded-bl-2xl rounded-br-2xl items-center justify-center"
+        >
+          <span>ahoj</span>
+        </div>
+      </div>
+
+      <div
+        id="indicator_1"
+        class="grid absolute top-4 right-4 w-64 h-[140px] bg-slate-900 rounded-2xl text-white hidden"
+      >
+        <div class="flex flex-col items-center justify-center">
+          <img
+            src="assets/tank.png"
+            class="w-16"
+            style="
+              filter: drop-shadow(0px 1000px 0 green);
+              transform: translateY(-1000px);
+            "
+          />
+        </div>
+
+        <div
+          class="flex flex-col col-start-2 col-span-2 row-start-1 items-center bg-black rounded-tr-2xl rounded-br-2xl justify-evenly"
+        >
+          <div class="ammo flex gap-2 w-24 h-8 w-full justify-center"></div>
+
+          <div class="health flex gap-2 w-24 h-8 w-full justify-center"></div>
+        </div>
+
+        <div
+          class="flex bg-black col-span-3 rounded-bl-2xl rounded-br-2xl items-center justify-center"
+        >
+          <span></span>
+        </div>
+      </div>
+
+      <div
+        id="indicator_2"
+        class="grid absolute bottom-4 left-4 w-64 h-[140px] bg-slate-900 rounded-2xl text-white hidden"
+      >
+        <div class="flex flex-col items-center justify-center">
+          <img
+            src="assets/tank.png"
+            class="w-16"
+            style="
+              filter: drop-shadow(0px 1000px 0 blue);
+              transform: translateY(-1000px);
+            "
+          />
+        </div>
+
+        <div
+          class="flex flex-col col-start-2 col-span-2 row-start-1 items-center bg-black rounded-tr-2xl rounded-br-2xl justify-evenly"
+        >
+          <div class="ammo flex gap-2 w-24 h-8 w-full justify-center">
+            <img src="assets/ammo.png" class="w-8 h-8" />
+            <img src="assets/ammo.png" class="w-8 h-8" />
+            <img src="assets/ammo.png" class="w-8 h-8" />
+          </div>
+
+          <div class="health flex gap-2 w-24 h-8 w-full justify-center"></div>
+        </div>
+
+        <div
+          class="flex bg-black col-span-3 rounded-bl-2xl rounded-br-2xl items-center justify-center"
+        >
+          <span></span>
+        </div>
+      </div>
+
+      <div
+        id="indicator_3"
+        class="grid absolute bottom-4 right-4 w-64 h-[140px] bg-slate-900 rounded-2xl text-white hidden"
+      >
+        <div class="flex flex-col items-center justify-center">
+          <img
+            src="assets/tank.png"
+            class="w-16"
+            style="
+              filter: drop-shadow(0px 1000px 0 yellow);
+              transform: translateY(-1000px);
+            "
+          />
+        </div>
+
+        <div
+          class="flex flex-col col-start-2 col-span-2 row-start-1 items-center bg-black rounded-tr-2xl rounded-br-2xl justify-evenly"
+        >
+          <div class="ammo flex gap-2 w-24 h-8 w-full justify-center"></div>
+
+          <div class="health flex gap-2 w-24 h-8 w-full justify-center"></div>
+        </div>
+
+        <div
+          class="flex bg-black col-span-3 rounded-bl-2xl rounded-br-2xl items-center justify-center"
+        >
+          <span></span>
+        </div>
+      </div>
+
+      <canvas
+        id="game_view"
+        height="600px"
+        width="600px"
+        class="border border-yellow-400 rounded-2xl border-[2px] w-1/2"
+      ></canvas>
+    </div>
+  </body>
+</html>
+
+<script src="lib/socket.io.min.js"></script>
+<script src="game.js"></script>

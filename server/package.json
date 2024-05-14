@@ -1,0 +1,12 @@
+{
+  "name": "tnki",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "author": "Mário Daniel Doskočil",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^4.7.4"
+  }
+}
